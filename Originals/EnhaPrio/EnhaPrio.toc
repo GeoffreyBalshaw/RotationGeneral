@@ -1,0 +1,14 @@
+## Interface: 30300
+## Title: EnhaPrio
+## Author: Stormcast
+## Notes: Suggested spell priority for enhancement shamans
+## SavedVariables: EnhaPrioDB
+## OptionalDeps: ACE3, ButtonFacade
+## X-Curse-Packaged-Version: v1.1.1
+## X-Curse-Project-Name: EnhaPrio
+## X-Curse-Project-ID: enhaprio
+## X-Curse-Repository-ID: wow/enhaprio/mainline
+
+embeds.xml
+
+EnhaPrio.lua
