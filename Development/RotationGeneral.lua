@@ -2,8 +2,7 @@
 -- Addon for World of Warcraft 3.3.5
 -- Written by Geoffrey Balshaw
 
-local RotationGeneral = LibStub( "AceAddon-3.0" ):NewAddon( "RotationGeneral", "AceConsole-3.0", "AceEvent-3.0" );
-
+-- this is the only object the user should change
 local priorityList = { -- initially populated with ret spells because I don't know other classes
 	"JudgementOfWisdom", -- judgement of wisdom
 	"DivineStorm", -- divine storm
@@ -14,6 +13,31 @@ local priorityList = { -- initially populated with ret spells because I don't kn
 	"DivinePlea", -- divine plea
 	
 }
+
+
+function getGCD();
+	-- get gcd
+	gcdStart, gcdDuration = GetSpellCooldown(Spells.DivinePlea.name) -- uses cleanse as an instant cast to get gcd info
+	-- if you're playing a caster class, gcd will be reduced via haste
+	-- so change the spell in this argument to some instant cast spell your class has
+
+
+	if gcdStart > 0 then
+		gcd = gcdStart + gcdDuration - ctime
+	else
+		gcd = 0
+	end
+end
+
+
+
+
+
+
+-- USER SHOULD NOT CHANGE ANYTHING PAST THIS 
+
+local RotationGeneral = LibStub( "AceAddon-3.0" ):NewAddon( "RotationGeneral", "AceConsole-3.0", "AceEvent-3.0" );
+local queue = {};
 
 local Spells = { -- this is gonna have to be updated with every single spell in the game which is gonna SUCK
 	Stormstrike = {id = 17364, name = GetSpellInfo(17364)},
@@ -37,3 +61,18 @@ local Spells = { -- this is gonna have to be updated with every single spell in 
 	Exorcism = {id = 48801, name = GetSpellInfo(48801)},
 	DivinePlea = {id = 54428, name = GetSpellInfo(54428)},
 }
+
+
+-- add a spell to the queue
+function addToQueue(spell)
+	queue[#queue+1] = spell;
+end
+
+
+-- TODO: this assumes you only ever want to cast instants, which is not how most classes work
+function isCastable(spellName)
+	-- check if you can cast that spell in one gcd
+	local _, GCD = gcd
+	local _, duration = GetSpellCooldown(spellName);
+	return duration == GCD;
+end
